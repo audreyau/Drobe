@@ -5,6 +5,7 @@ struct ClothingDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Bindable var item: ClothingItem
     @State private var showDeleteConfirm = false
+    @State private var showCrop = false
     @State private var isEditing = false
     @State private var editName = ""
     @State private var editCategory: ClothingCategory = .other
@@ -15,6 +16,19 @@ struct ClothingDetailView: View {
         ScrollView {
             VStack(spacing: 24) {
                 imageSection
+
+                Button {
+                    showCrop = true
+                } label: {
+                    Label("Crop Image", systemImage: "crop")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(Theme.accent)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(Theme.accent.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+                }
+                .buttonStyle(.plain)
+
                 infoSection
                 if isEditing {
                     editSection
@@ -45,6 +59,13 @@ struct ClothingDetailView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("This will permanently remove this item from your wardrobe.")
+        }
+        .fullScreenCover(isPresented: $showCrop) {
+            if let img = ImageService.shared.loadImage(relativePath: item.cutoutImagePath) {
+                CropView(image: img) { cropped in
+                    saveCroppedImage(cropped)
+                }
+            }
         }
     }
 
@@ -196,6 +217,16 @@ struct ClothingDetailView: View {
         guard !cleaned.isEmpty, !editTags.contains(cleaned) else { return }
         editTags.append(cleaned)
         tagInput = ""
+    }
+
+    private func saveCroppedImage(_ cropped: UIImage) {
+        let oldPath = item.cutoutImagePath
+        if let newPath = ImageService.shared.saveImage(cropped, prefix: "cut") {
+            item.cutoutImagePath = newPath
+            item.dominantColorHex = ColorDetector.dominantColorHex(from: cropped)
+            try? modelContext.save()
+            ImageService.shared.deleteImage(relativePath: oldPath)
+        }
     }
 
     private func deleteItem() {

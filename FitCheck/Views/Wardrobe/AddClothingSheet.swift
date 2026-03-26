@@ -17,6 +17,7 @@ struct AddClothingSheet: View {
 
     @State private var showCamera = false
     @State private var rotationDegrees: Double = 0
+    @State private var showCrop = false
 
     private var canSave: Bool {
         cutoutImage != nil
@@ -55,6 +56,14 @@ struct AddClothingSheet: View {
                     Task { await processImage(image) }
                 }
             }
+            .fullScreenCover(isPresented: $showCrop) {
+                if let cutout = cutoutImage {
+                    CropView(image: rotateImage(cutout, byDegrees: rotationDegrees)) { cropped in
+                        cutoutImage = cropped
+                        rotationDegrees = 0
+                    }
+                }
+            }
         }
     }
 
@@ -80,14 +89,14 @@ struct AddClothingSheet: View {
                     )
                     .clipped()
 
-                HStack(spacing: 20) {
+                HStack(spacing: 12) {
                     Button {
                         rotationDegrees -= 90
                     } label: {
-                        Label("Rotate Left", systemImage: "rotate.left.fill")
+                        Label("Left", systemImage: "rotate.left.fill")
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(Theme.accent)
-                            .padding(.horizontal, 14)
+                            .padding(.horizontal, 12)
                             .padding(.vertical, 8)
                             .background(Theme.border.opacity(0.6), in: Capsule())
                     }
@@ -96,12 +105,24 @@ struct AddClothingSheet: View {
                     Button {
                         rotationDegrees += 90
                     } label: {
-                        Label("Rotate Right", systemImage: "rotate.right.fill")
+                        Label("Right", systemImage: "rotate.right.fill")
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(Theme.accent)
-                            .padding(.horizontal, 14)
+                            .padding(.horizontal, 12)
                             .padding(.vertical, 8)
                             .background(Theme.border.opacity(0.6), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        showCrop = true
+                    } label: {
+                        Label("Crop", systemImage: "crop")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(Theme.accent, in: Capsule())
                     }
                     .buttonStyle(.plain)
                 }

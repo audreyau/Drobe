@@ -20,6 +20,7 @@
 		9F115F71AD37F0AAD4C5F736 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF921BEFE30C5C72FBFEB29 /* MainTabView.swift */; };
 		AA1111111111111111111111 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2222222222222222222222 /* Assets.xcassets */; };
 		AA4444444444444444444444 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5555555555555555555555 /* FlowLayout.swift */; };
+		BB6666666666666666666666 /* CropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7777777777777777777777 /* CropView.swift */; };
 		C1D5A740305A9DFF134BEBB7 /* WardrobeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583A509DF13EB892E865F395 /* WardrobeView.swift */; };
 		C27D027DE5639243746586EC /* ClothingItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E06BB331D37C5A80657C49 /* ClothingItem.swift */; };
 		C70005DE5BB7D046D695D6D7 /* Outfit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6805B836A709DB564010FE2 /* Outfit.swift */; };
@@ -49,6 +50,7 @@
 		E6805B836A709DB564010FE2 /* Outfit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outfit.swift; sourceTree = "<group>"; };
 		E73C1F46D5CA27B011E0491E /* CanvasPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasPlacement.swift; sourceTree = "<group>"; };
 		FAF921BEFE30C5C72FBFEB29 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		BB7777777777777777777777 /* CropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -113,6 +115,7 @@
 		C456C25A8F678B798CCD3D8E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				BB7777777777777777777777 /* CropView.swift */,
 				AA5555555555555555555555 /* FlowLayout.swift */,
 				FAF921BEFE30C5C72FBFEB29 /* MainTabView.swift */,
 				C733C896644A7A3AA8B5C0B8 /* Outfits */,
@@ -220,6 +223,7 @@
 				4EB500480E7FC7838B9EE8E2 /* ClothingDetailView.swift in Sources */,
 				C27D027DE5639243746586EC /* ClothingItem.swift in Sources */,
 				EF3AF6EE78396F9E18509E35 /* ColorDetector.swift in Sources */,
+				BB6666666666666666666666 /* CropView.swift in Sources */,
 				24AEDDD936C84F9EE721E33A /* FitCheckApp.swift in Sources */,
 				AA4444444444444444444444 /* FlowLayout.swift in Sources */,
 				8C0793D134FE94D4CCBEE54E /* ImageService.swift in Sources */,
