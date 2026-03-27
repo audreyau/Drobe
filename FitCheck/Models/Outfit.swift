@@ -10,6 +10,7 @@ final class Outfit {
     var canvasData: Data?
     var canvasWidth: Double = 0
     var canvasHeight: Double = 0
+    var tags: [String] = []
 
     var slots: [OutfitSlot] {
         get {

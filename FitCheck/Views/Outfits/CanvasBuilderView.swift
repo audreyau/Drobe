@@ -13,6 +13,8 @@ struct CanvasBuilderView: View {
     @State private var selectedId: UUID?
     @State private var showPicker = false
 
+    @State private var tags: [String] = []
+    @State private var tagInput = ""
     @State private var dragOffset: CGSize = .zero
     @State private var activeGestureId: UUID?
     @State private var baseScale: CGFloat = 1.0
@@ -55,6 +57,7 @@ struct CanvasBuilderView: View {
         guard let outfit = existingOutfit, outfitName.isEmpty, placements.isEmpty else { return }
         outfitName = outfit.name
         placements = outfit.canvasItems
+        tags = outfit.tags
     }
 
     // MARK: - Canvas
@@ -182,30 +185,34 @@ struct CanvasBuilderView: View {
     // MARK: - Toolbar
 
     private var toolbar: some View {
-        HStack(spacing: 16) {
-            Button { showPicker = true } label: {
-                Label("Add Item", systemImage: "plus.circle.fill")
-                    .font(.subheadline.weight(.medium))
-            }
-
-            Spacer()
-
-            if selectedId != nil {
-                Button { bringToFront() } label: {
-                    Image(systemName: "square.3.layers.3d.top.filled")
-                        .font(.title3)
+        VStack(spacing: 8) {
+            HStack(spacing: 16) {
+                Button { showPicker = true } label: {
+                    Label("Add Item", systemImage: "plus.circle.fill")
+                        .font(.subheadline.weight(.medium))
                 }
 
-                Button { removeSelected() } label: {
-                    Image(systemName: "trash")
-                        .font(.title3)
-                        .foregroundStyle(Theme.destructive)
+                Spacer()
+
+                if selectedId != nil {
+                    Button { bringToFront() } label: {
+                        Image(systemName: "square.3.layers.3d.top.filled")
+                            .font(.title3)
+                    }
+
+                    Button { removeSelected() } label: {
+                        Image(systemName: "trash")
+                            .font(.title3)
+                            .foregroundStyle(Theme.destructive)
+                    }
                 }
+
+                TextField("Name", text: $outfitName)
+                    .textFieldStyle(.roundedBorder)
+                    .frame(maxWidth: 140)
             }
 
-            TextField("Name", text: $outfitName)
-                .textFieldStyle(.roundedBorder)
-                .frame(maxWidth: 140)
+            tagRow
         }
         .padding(.horizontal)
         .padding(.vertical, 10)
@@ -213,6 +220,43 @@ struct CanvasBuilderView: View {
         .overlay(alignment: .top) {
             Divider()
         }
+    }
+
+    private var tagRow: some View {
+        HStack(spacing: 6) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(tags, id: \.self) { tag in
+                        HStack(spacing: 4) {
+                            Text(tag).font(.caption2.weight(.medium))
+                            Button { tags.removeAll { $0 == tag } } label: {
+                                Image(systemName: "xmark").font(.system(size: 7, weight: .bold))
+                            }
+                        }
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Theme.tagColor(for: tag), in: Capsule())
+                    }
+                }
+            }
+
+            TextField("Tag...", text: $tagInput)
+                .textFieldStyle(.roundedBorder)
+                .frame(maxWidth: 100)
+                .onSubmit { addTag() }
+
+            Button("Add") { addTag() }
+                .font(.caption.weight(.semibold))
+                .disabled(tagInput.trimmingCharacters(in: .whitespaces).isEmpty)
+        }
+    }
+
+    private func addTag() {
+        let cleaned = tagInput.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !cleaned.isEmpty, !tags.contains(cleaned) else { return }
+        tags.append(cleaned)
+        tagInput = ""
     }
 
     // MARK: - Actions
@@ -249,12 +293,14 @@ struct CanvasBuilderView: View {
             existing.canvasItems = placements
             existing.canvasWidth = canvasSize.width
             existing.canvasHeight = canvasSize.height
+            existing.tags = tags
         } else {
             let outfit = Outfit(
                 name: finalName,
                 canvasItems: placements,
                 canvasSize: canvasSize
             )
+            outfit.tags = tags
             modelContext.insert(outfit)
         }
         try? modelContext.save()

@@ -9,6 +9,16 @@ struct OutfitsView: View {
     @State private var showSlotBuilder = false
     @State private var showCanvasBuilder = false
     @State private var selectedOutfitId: UUID?
+    @State private var selectedTag: String?
+
+    private var allTags: [String] {
+        Array(Set(outfits.flatMap(\.tags))).sorted()
+    }
+
+    private var filteredOutfits: [Outfit] {
+        guard let tag = selectedTag else { return outfits }
+        return outfits.filter { $0.tags.contains(tag) }
+    }
 
     private let columns = [
         GridItem(.flexible(), spacing: 14),
@@ -18,14 +28,24 @@ struct OutfitsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                if outfits.isEmpty {
-                    emptyState
-                } else {
-                    outfitGrid
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Outfits")
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundStyle(Theme.accent)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                        .padding(.bottom, 4)
+
+                    if outfits.isEmpty {
+                        emptyState
+                    } else {
+                        if !allTags.isEmpty { tagFilters }
+                        outfitGrid
+                    }
                 }
             }
             .background(Theme.bg)
-            .navigationTitle("Outfits")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showNewOutfitChoice = true } label: {
@@ -84,9 +104,43 @@ struct OutfitsView: View {
         .padding(.horizontal, 40)
     }
 
+    private var tagFilters: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                Button {
+                    selectedTag = nil
+                } label: {
+                    Text("All")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(selectedTag == nil ? .white : Theme.accentSoft)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(selectedTag == nil ? Theme.accent : Theme.border.opacity(0.6), in: Capsule())
+                }
+                .buttonStyle(.plain)
+
+                ForEach(allTags, id: \.self) { tag in
+                    Button {
+                        selectedTag = selectedTag == tag ? nil : tag
+                    } label: {
+                        Text(tag)
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(selectedTag == tag ? .white : Theme.accentSoft)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(selectedTag == tag ? Theme.tagColor(for: tag) : Theme.border.opacity(0.6), in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 10)
+        }
+    }
+
     private var outfitGrid: some View {
         LazyVGrid(columns: columns, spacing: 14) {
-            ForEach(outfits) { outfit in
+            ForEach(filteredOutfits) { outfit in
                 Button {
                     selectedOutfitId = outfit.id
                 } label: {

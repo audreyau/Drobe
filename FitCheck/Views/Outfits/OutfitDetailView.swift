@@ -91,6 +91,19 @@ struct OutfitDetailView: View {
             Text("Created \(outfit.createdAt, style: .date)")
                 .font(.caption)
                 .foregroundStyle(Theme.subtleText)
+
+            if !outfit.tags.isEmpty {
+                FlowLayout(spacing: 6) {
+                    ForEach(outfit.tags, id: \.self) { tag in
+                        Text(tag)
+                            .font(.caption2.weight(.medium))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                            .background(Theme.tagColor(for: tag), in: Capsule())
+                    }
+                }
+            }
         }
         .frame(maxWidth: .infinity)
         .padding()

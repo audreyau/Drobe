@@ -27,12 +27,5 @@ struct MainTabView: View {
         tabAppearance.shadowColor = UIColor.black.withAlphaComponent(0.05)
         UITabBar.appearance().standardAppearance = tabAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabAppearance
-
-        let navAppearance = UINavigationBarAppearance()
-        navAppearance.configureWithOpaqueBackground()
-        navAppearance.backgroundColor = UIColor(Theme.bg)
-        navAppearance.shadowColor = .clear
-        UINavigationBar.appearance().standardAppearance = navAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
     }
 }

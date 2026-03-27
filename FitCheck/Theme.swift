@@ -18,12 +18,12 @@ enum Theme {
 
     static func tagColor(for tag: String) -> Color {
         switch tag.lowercased() {
-        case "casual": tagCasual
-        case "work": tagWork
-        case "formal": tagFormal
-        case "summer": tagSummer
-        case "winter": tagWinter
-        default: accentSoft
+        case "casual": return tagCasual
+        case "work": return tagWork
+        case "formal": return tagFormal
+        case "summer": return tagSummer
+        case "winter": return tagWinter
+        default: return accentSoft
         }
     }
 }

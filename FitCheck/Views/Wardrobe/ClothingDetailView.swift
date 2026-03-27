@@ -11,6 +11,7 @@ struct ClothingDetailView: View {
     @State private var editCategory: ClothingCategory = .other
     @State private var editTags: [String] = []
     @State private var tagInput = ""
+    @State private var editColor: Color = .gray
 
     var body: some View {
         ScrollView {
@@ -158,6 +159,15 @@ struct ClothingDetailView: View {
             }
             .pickerStyle(.menu)
 
+            HStack {
+                Text("Color")
+                    .font(.subheadline)
+                    .foregroundStyle(Theme.accent)
+                Spacer()
+                ColorPicker("", selection: $editColor, supportsOpacity: false)
+                    .labelsHidden()
+            }
+
             FlowLayout(spacing: 6) {
                 ForEach(editTags, id: \.self) { tag in
                     HStack(spacing: 4) {
@@ -203,13 +213,24 @@ struct ClothingDetailView: View {
         editName = item.name
         editCategory = item.category
         editTags = item.tags
+        if !item.dominantColorHex.isEmpty {
+            editColor = Color(uiColor: ColorDetector.color(from: item.dominantColorHex))
+        }
     }
 
     private func applyEdits() {
         item.name = editName.trimmingCharacters(in: .whitespaces)
         item.category = editCategory
         item.tags = editTags
+        item.dominantColorHex = hexFromColor(editColor)
         try? modelContext.save()
+    }
+
+    private func hexFromColor(_ color: Color) -> String {
+        let uiColor = UIColor(color)
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return String(format: "#%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
     }
 
     private func addEditTag() {

@@ -7,23 +7,23 @@ enum ClothingCategory: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .top: "Top"
-        case .bottom: "Bottom"
-        case .outerwear: "Outerwear"
-        case .shoes: "Shoes"
-        case .accessory: "Accessory"
-        case .other: "Other"
+        case .top: return "Top"
+        case .bottom: return "Bottom"
+        case .outerwear: return "Outerwear"
+        case .shoes: return "Shoes"
+        case .accessory: return "Accessory"
+        case .other: return "Other"
         }
     }
 
     var iconName: String {
         switch self {
-        case .top: "tshirt"
-        case .bottom: "figure.walk"
-        case .outerwear: "cloud.sun"
-        case .shoes: "shoe"
-        case .accessory: "eyeglasses"
-        case .other: "square.grid.2x2"
+        case .top: return "tshirt"
+        case .bottom: return "figure.walk"
+        case .outerwear: return "cloud.sun"
+        case .shoes: return "shoe"
+        case .accessory: return "eyeglasses"
+        case .other: return "square.grid.2x2"
         }
     }
 }

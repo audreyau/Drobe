@@ -30,17 +30,24 @@ struct WardrobeView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                if items.isEmpty {
-                    emptyState
-                } else {
-                    VStack(spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Wardrobe")
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundStyle(Theme.accent)
+                        .padding(.horizontal)
+                        .padding(.top, 8)
+                        .padding(.bottom, 4)
+
+                    if items.isEmpty {
+                        emptyState
+                    } else {
                         filters
                         itemGrid
                     }
                 }
             }
             .background(Theme.bg)
-            .navigationTitle("Wardrobe")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showAddSheet = true } label: {

@@ -11,6 +11,8 @@ struct SlotBuilderView: View {
     @State private var outfitName = ""
     @State private var slots: [OutfitSlot] = ClothingCategory.allCases.map { OutfitSlot(category: $0, clothingItemId: nil) }
     @State private var pickingSlotIndex: Int?
+    @State private var tags: [String] = []
+    @State private var tagInput = ""
 
     private var filledSlots: Int {
         slots.filter { $0.clothingItemId != nil }.count
@@ -21,6 +23,7 @@ struct SlotBuilderView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     nameField
+                    outfitTagSection
                     silhouette
                     slotList
                 }
@@ -131,6 +134,45 @@ struct SlotBuilderView: View {
         .buttonStyle(.plain)
     }
 
+    private var outfitTagSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Tags")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.subtleText)
+
+            FlowLayout(spacing: 6) {
+                ForEach(tags, id: \.self) { tag in
+                    HStack(spacing: 4) {
+                        Text(tag).font(.caption2.weight(.medium))
+                        Button { tags.removeAll { $0 == tag } } label: {
+                            Image(systemName: "xmark").font(.system(size: 8, weight: .bold))
+                        }
+                    }
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Theme.tagColor(for: tag), in: Capsule())
+                }
+            }
+
+            HStack {
+                TextField("Add tag...", text: $tagInput)
+                    .textFieldStyle(.roundedBorder)
+                    .onSubmit { addTag() }
+                Button("Add") { addTag() }
+                    .font(.caption.weight(.semibold))
+                    .disabled(tagInput.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+    }
+
+    private func addTag() {
+        let cleaned = tagInput.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !cleaned.isEmpty, !tags.contains(cleaned) else { return }
+        tags.append(cleaned)
+        tagInput = ""
+    }
+
     private var slotList: some View {
         EmptyView()
     }
@@ -138,6 +180,7 @@ struct SlotBuilderView: View {
     private func loadExisting() {
         guard let outfit = existingOutfit, outfitName.isEmpty else { return }
         outfitName = outfit.name
+        tags = outfit.tags
         let saved = outfit.slots
         if !saved.isEmpty {
             for savedSlot in saved {
@@ -155,8 +198,10 @@ struct SlotBuilderView: View {
         if let existing = existingOutfit {
             existing.name = finalName
             existing.slots = slots
+            existing.tags = tags
         } else {
             let outfit = Outfit(name: finalName, slots: slots)
+            outfit.tags = tags
             modelContext.insert(outfit)
         }
         try? modelContext.save()

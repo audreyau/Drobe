@@ -43,7 +43,8 @@ struct AddClothingSheet: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") { save() }
                         .fontWeight(.semibold)
-                        .foregroundStyle(canSave ? Theme.accent : Theme.subtleText)
+                        .foregroundStyle(Theme.accent)
+                        .opacity(canSave ? 1 : 0.4)
                         .disabled(!canSave)
                 }
             }
@@ -175,12 +176,36 @@ struct AddClothingSheet: View {
             TextField("Item name (optional)", text: $name)
                 .textFieldStyle(.roundedBorder)
 
-            Picker("Category", selection: $category) {
-                ForEach(ClothingCategory.allCases) { cat in
-                    Text(cat.displayName).tag(cat)
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Category")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Theme.subtleText)
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(ClothingCategory.allCases) { cat in
+                            Button {
+                                category = cat
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image(systemName: cat.iconName)
+                                        .font(.caption2)
+                                    Text(cat.displayName)
+                                        .font(.caption.weight(.medium))
+                                }
+                                .foregroundStyle(category == cat ? .white : Theme.accentSoft)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(
+                                    category == cat ? Theme.accent : Theme.border.opacity(0.6),
+                                    in: Capsule()
+                                )
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
             }
-            .pickerStyle(.segmented)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Tags")
