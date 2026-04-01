@@ -94,8 +94,11 @@ struct WardrobeView: View {
                     .background(Theme.accent, in: Capsule())
             }
         }
-        .padding(.top, 100)
         .padding(.horizontal, 40)
+        .frame(maxWidth: .infinity)
+        .containerRelativeFrame(.vertical) { height, _ in
+            height * 0.7
+        }
     }
 
     private var filters: some View {

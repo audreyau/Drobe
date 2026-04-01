@@ -194,18 +194,20 @@ struct CanvasBuilderView: View {
 
                 Spacer()
 
-                if selectedId != nil {
-                    Button { bringToFront() } label: {
-                        Image(systemName: "square.3.layers.3d.top.filled")
-                            .font(.title3)
-                    }
-
-                    Button { removeSelected() } label: {
-                        Image(systemName: "trash")
-                            .font(.title3)
-                            .foregroundStyle(Theme.destructive)
-                    }
+                Button { bringToFront() } label: {
+                    Image(systemName: "square.3.layers.3d.top.filled")
+                        .font(.title3)
                 }
+                .opacity(selectedId != nil ? 1 : 0)
+                .disabled(selectedId == nil)
+
+                Button { removeSelected() } label: {
+                    Image(systemName: "trash")
+                        .font(.title3)
+                        .foregroundStyle(Theme.destructive)
+                }
+                .opacity(selectedId != nil ? 1 : 0)
+                .disabled(selectedId == nil)
 
                 TextField("Name", text: $outfitName)
                     .textFieldStyle(.roundedBorder)
@@ -220,6 +222,7 @@ struct CanvasBuilderView: View {
         .overlay(alignment: .top) {
             Divider()
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
 
     private var tagRow: some View {

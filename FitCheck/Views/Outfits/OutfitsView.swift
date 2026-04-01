@@ -100,8 +100,11 @@ struct OutfitsView: View {
                     .background(Theme.accent, in: Capsule())
             }
         }
-        .padding(.top, 100)
         .padding(.horizontal, 40)
+        .frame(maxWidth: .infinity)
+        .containerRelativeFrame(.vertical) { height, _ in
+            height * 0.7
+        }
     }
 
     private var tagFilters: some View {
@@ -153,9 +156,11 @@ struct OutfitsView: View {
     }
 
     private func outfitCard(_ outfit: Outfit) -> some View {
-        VStack(spacing: 8) {
+        let isCanvas = !outfit.canvasItems.isEmpty
+
+        return VStack(spacing: 8) {
             outfitThumbnail(outfit)
-                .frame(height: 140)
+                .frame(height: isCanvas ? 200 : 140)
                 .frame(maxWidth: .infinity)
                 .clipped()
 
@@ -202,16 +207,20 @@ struct OutfitsView: View {
     private func canvasThumbnail(_ outfit: Outfit) -> some View {
         let origW = outfit.canvasWidth > 0 ? outfit.canvasWidth : 390
         let origH = outfit.canvasHeight > 0 ? outfit.canvasHeight : 600
+        let aspect = origW / origH
 
         return GeometryReader { geo in
-            let scaleX = geo.size.width / origW
-            let scaleY = geo.size.height / origH
-            let scale = min(scaleX, scaleY)
+            let fitW = geo.size.width
+            let fitH = fitW / aspect
+            let scale = fitW / origW
 
             ZStack {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.white.opacity(0.5))
+
                 ForEach(outfit.canvasItems) { placement in
                     if let item = clothing.first(where: { $0.id == placement.clothingItemId }),
-                       let img = ImageService.shared.loadThumbnail(relativePath: item.cutoutImagePath, maxPixels: 120) {
+                       let img = ImageService.shared.loadThumbnail(relativePath: item.cutoutImagePath, maxPixels: 200) {
                         Image(uiImage: img)
                             .resizable()
                             .scaledToFit()
@@ -225,6 +234,9 @@ struct OutfitsView: View {
                     }
                 }
             }
+            .frame(width: fitW, height: fitH)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .frame(width: geo.size.width, height: geo.size.height)
         }
     }
 }

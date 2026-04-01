@@ -1,8 +1,19 @@
-# Xcode user data
+# Xcode user-specific files
 xcuserdata/
-*.xcuserstate
+*.xcuserdatad
+
 # Build artifacts
-DerivedData/
 build/
+DerivedData/
+
+# CocoaPods / SPM
+Pods/
+.build/
+
 # OS files
 .DS_Store
+*.swp
+*~
+
+# Xcode workspace settings (auto-generated, user-specific)
+*.xcworkspace/xcuserdata/

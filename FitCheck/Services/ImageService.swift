@@ -18,17 +18,21 @@ final class ImageService {
         fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 
-    private func ensureImagesDir() {
-        let dir = documentsURL.appendingPathComponent("ClothingImages", isDirectory: true)
+    private func ensureDir(_ subdirectory: String) {
+        let dir = documentsURL.appendingPathComponent(subdirectory, isDirectory: true)
         if !fileManager.fileExists(atPath: dir.path) {
             try? fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
         }
     }
 
+    private func ensureImagesDir() {
+        ensureDir("ClothingImages")
+    }
+
     // MARK: - Save
 
-    func saveImage(_ image: UIImage, prefix: String = "img") -> String? {
-        ensureImagesDir()
+    func saveImage(_ image: UIImage, prefix: String = "img", subdirectory: String = "ClothingImages") -> String? {
+        ensureDir(subdirectory)
 
         let maxDimension: CGFloat = 2048
         let scaledImage: UIImage
@@ -58,7 +62,7 @@ final class ImageService {
         guard let imageData = data else { return nil }
 
         let filename = "\(prefix)_\(UUID().uuidString).\(ext)"
-        let relativePath = "ClothingImages/\(filename)"
+        let relativePath = "\(subdirectory)/\(filename)"
         let fullURL = documentsURL.appendingPathComponent(relativePath)
 
         do {

@@ -1,6 +1,13 @@
 import Foundation
 import SwiftData
 
+struct WearPhoto: Codable, Identifiable, Hashable {
+    var id: UUID = UUID()
+    var imagePath: String
+    var date: Date
+    var caption: String = ""
+}
+
 @Model
 final class Outfit {
     var id: UUID
@@ -11,6 +18,7 @@ final class Outfit {
     var canvasWidth: Double = 0
     var canvasHeight: Double = 0
     var tags: [String] = []
+    var wearPhotosData: Data?
 
     var slots: [OutfitSlot] {
         get {
@@ -29,6 +37,16 @@ final class Outfit {
         }
         set {
             canvasData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
+    var wearPhotos: [WearPhoto] {
+        get {
+            guard let data = wearPhotosData else { return [] }
+            return (try? JSONDecoder().decode([WearPhoto].self, from: data)) ?? []
+        }
+        set {
+            wearPhotosData = try? JSONEncoder().encode(newValue)
         }
     }
 

@@ -9,6 +9,7 @@ struct OutfitDetailView: View {
     @State private var showDeleteConfirm = false
     @State private var showCanvasEditor = false
     @State private var showSlotEditor = false
+    @State private var showWearPhotoGallery = false
     @State private var isRenaming = false
     @State private var editName = ""
 
@@ -33,6 +34,7 @@ struct OutfitDetailView: View {
                     canvasPreview
                 }
                 itemsGrid
+                wearPhotosSection
                 dangerZone
             }
             .padding()
@@ -64,6 +66,9 @@ struct OutfitDetailView: View {
         }
         .fullScreenCover(isPresented: $showSlotEditor) {
             SlotBuilderView(existingOutfit: outfit)
+        }
+        .sheet(isPresented: $showWearPhotoGallery) {
+            WearPhotoGalleryView(outfit: outfit)
         }
     }
 
@@ -243,6 +248,89 @@ struct OutfitDetailView: View {
                     .padding(6)
                     .card()
                 }
+            }
+        }
+    }
+
+    private var wearPhotosSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("Wear Photos")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Theme.accent)
+
+                Spacer()
+
+                Button {
+                    showWearPhotoGallery = true
+                } label: {
+                    Label(outfit.wearPhotos.isEmpty ? "Add" : "View All", systemImage: "plus.circle.fill")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(Theme.accent)
+                }
+                .buttonStyle(.plain)
+            }
+
+            if outfit.wearPhotos.isEmpty {
+                HStack(spacing: 10) {
+                    Image(systemName: "camera.on.rectangle")
+                        .font(.title3)
+                        .foregroundStyle(Theme.subtleText.opacity(0.5))
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("No photos yet")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(Theme.subtleText)
+                        Text("Add photos of when you wore this outfit")
+                            .font(.caption2)
+                            .foregroundStyle(Theme.subtleText.opacity(0.7))
+                    }
+                    Spacer()
+                }
+                .padding(14)
+                .card()
+                .onTapGesture { showWearPhotoGallery = true }
+            } else {
+                let recentPhotos = outfit.wearPhotos.sorted { $0.date > $1.date }.prefix(4)
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 10) {
+                        ForEach(Array(recentPhotos)) { photo in
+                            if let img = ImageService.shared.loadThumbnail(relativePath: photo.imagePath, maxPixels: 200) {
+                                VStack(spacing: 4) {
+                                    Image(uiImage: img)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 130)
+                                        .clipped()
+                                        .clipShape(RoundedRectangle(cornerRadius: 10))
+
+                                    Text(photo.date, style: .date)
+                                        .font(.system(size: 9))
+                                        .foregroundStyle(Theme.subtleText)
+                                }
+                            }
+                        }
+
+                        if outfit.wearPhotos.count > 4 {
+                            VStack {
+                                Text("+\(outfit.wearPhotos.count - 4)")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(Theme.accent)
+                                Text("more")
+                                    .font(.caption2)
+                                    .foregroundStyle(Theme.subtleText)
+                            }
+                            .frame(width: 70, height: 130)
+                            .background(Theme.accent.opacity(0.08), in: RoundedRectangle(cornerRadius: 10))
+                            .onTapGesture { showWearPhotoGallery = true }
+                        }
+                    }
+                }
+
+                Text("\(outfit.wearPhotos.count) photo\(outfit.wearPhotos.count == 1 ? "" : "s")")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.subtleText)
             }
         }
     }

@@ -27,6 +27,7 @@
 		DEC7787107ECB842D85D9B58 /* CanvasBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019EB0F8AF812172ADD09063 /* CanvasBuilderView.swift */; };
 		EF3AF6EE78396F9E18509E35 /* ColorDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33C238A808B90C7CE74A376 /* ColorDetector.swift */; };
 		EFEAEB5A342B048302FAF0AA /* OutfitDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CC1B248DDB781D7E397ED9 /* OutfitDetailView.swift */; };
+		F1A2B3C4D5E6F7081234ABCD /* WearPhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708ABCD1234 /* WearPhotoGalleryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		E73C1F46D5CA27B011E0491E /* CanvasPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasPlacement.swift; sourceTree = "<group>"; };
 		FAF921BEFE30C5C72FBFEB29 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		BB7777777777777777777777 /* CropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropView.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F708ABCD1234 /* WearPhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearPhotoGalleryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -131,6 +133,7 @@
 				44CC1B248DDB781D7E397ED9 /* OutfitDetailView.swift */,
 				A21706F8AF9415EFA6695F79 /* OutfitsView.swift */,
 				6864337687F4C216EC406004 /* SlotBuilderView.swift */,
+				F1A2B3C4D5E6F708ABCD1234 /* WearPhotoGalleryView.swift */,
 			);
 			path = Outfits;
 			sourceTree = "<group>";
@@ -233,6 +236,7 @@
 				7AE8051B8B540AE5C0B291BB /* OutfitsView.swift in Sources */,
 				81A233EB3F598B07D2EEB289 /* SlotBuilderView.swift in Sources */,
 				3CC0036F95513EE9C95145C5 /* Theme.swift in Sources */,
+				F1A2B3C4D5E6F7081234ABCD /* WearPhotoGalleryView.swift in Sources */,
 				C1D5A740305A9DFF134BEBB7 /* WardrobeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
